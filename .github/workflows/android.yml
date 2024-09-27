@@ -15,29 +15,33 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK 11
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
         java-version: '11'
 
     - name: Cache Gradle packages
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
-          ~/android/.gradle/caches
-          ~/android/.gradle/wrapper
-        key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          android/.gradle/caches  # Updated to point to android folder
+          android/.gradle/wrapper  # Updated to point to android folder
+        key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle*', 'android/**/gradle-wrapper.properties') }}
         restore-keys: |
           gradle-${{ runner.os }}
 
+    - name: Grant execute permission to gradlew
+      run: chmod +x android/gradlew  # Make gradlew executable
+
     - name: Build APK
-      run: ./android/gradlew assembleRelease
+      working-directory: android  # Change working directory to the android folder
+      run: ./gradlew assembleRelease
 
     - name: Upload APK
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: app-release.apk
-        path: app/build/outputs/apk/release/app-release.apk
+        path: android/app/build/outputs/apk/release/app-release.apk  # Adjust path if necessary
