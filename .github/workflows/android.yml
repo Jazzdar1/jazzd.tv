@@ -22,6 +22,14 @@ jobs:
       with:
         distribution: 'zulu'
         java-version: '17'
+        
+    - name: Set up Flutter SDK
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: 'stable'  # Or specify a specific version
+
+    - name: Install Flutter dependencies
+      run: flutter pub get  # Ensure Flutter dependencies are installed
 
     - name: Cache Gradle packages
       uses: actions/cache@v3
