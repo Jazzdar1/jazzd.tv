@@ -27,14 +27,14 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.gradle/caches
-          ~/.gradle/wrapper
+          ~/android/.gradle/caches
+          ~/android/.gradle/wrapper
         key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           gradle-${{ runner.os }}
 
     - name: Build APK
-      run: ./gradlew assembleRelease
+      run: ./android/gradlew assembleRelease
 
     - name: Upload APK
       uses: actions/upload-artifact@v2
