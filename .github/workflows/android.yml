@@ -38,7 +38,7 @@ jobs:
 
     - name: Build APK
       working-directory: android  # Change working directory to the android folder
-      run: ./gradlew assembleRelease
+      run: android/gradlew assembleRelease
 
     - name: Upload APK
       uses: actions/upload-artifact@v3
