@@ -1,6 +1,7 @@
 name: Android APK Build
 
 on:
+  workflow_dispatch:  # Allow manual triggers
   push:
     branches:
       - main  # Replace with your branch if different
