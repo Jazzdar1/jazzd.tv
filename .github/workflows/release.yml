@@ -32,21 +32,25 @@ jobs:
     - name: Add Flutter to PATH
       run: echo "$PWD/flutter/bin" >> $GITHUB_PATH
 
-    # Step 5: Check Flutter and Dart versions to verify correctness
+    # Step 5: Clean Flutter cache to ensure no old Dart SDK is being used
+    - name: Clean Flutter cache
+      run: flutter clean
+
+    # Step 6: Check Flutter and Dart versions to verify correctness
     - name: Check Flutter and Dart versions
       run: |
         flutter --version
         dart --version
 
-    # Step 6: Install dependencies
+    # Step 7: Install dependencies
     - name: Install dependencies
       run: flutter pub get
 
-    # Step 7: Build release APK
+    # Step 8: Build release APK
     - name: Build release APK
       run: flutter build apk --release --no-shrink
 
-    # Step 8: Upload APK
+    # Step 9: Upload APK
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
