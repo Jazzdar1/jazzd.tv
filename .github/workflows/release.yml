@@ -13,24 +13,34 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Manually install specific Flutter version (3.13.0 with Dart 3.2.1)
-    - name: Install specific Flutter version
+    # Step 1: Remove any pre-installed Flutter SDK to avoid conflicts
+    - name: Remove pre-installed Flutter
+      run: |
+        sudo rm -rf /usr/local/flutter
+        sudo rm -rf $HOME/.flutter
+
+    # Step 2: Manually install specific Flutter version (3.13.0)
+    - name: Install specific Flutter version (3.13.0 with Dart 3.2.1)
       run: |
         git clone https://github.com/flutter/flutter.git -b 3.13.0 --depth 1
         echo "$PWD/flutter/bin" >> $GITHUB_PATH
+        flutter --version
 
-    # Check Flutter version and Dart version
+    # Step 3: Check Flutter and Dart versions to ensure they're correct
     - name: Check Flutter and Dart versions
       run: |
         flutter --version
         dart --version
 
+    # Step 4: Install dependencies
     - name: Install dependencies
       run: flutter pub get
 
+    # Step 5: Build release APK
     - name: Build release APK
       run: flutter build apk --release --no-shrink
 
+    # Step 6: Upload APK
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
