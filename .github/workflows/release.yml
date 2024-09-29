@@ -1,4 +1,4 @@
-name: Flutter Release APK Build v3
+name: Flutter Release APK Build
 
 on:
   workflow_dispatch:
@@ -14,14 +14,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Remove pre-installed Flutter and Dart SDK to avoid conflicts
-    - name: Remove pre-installed Flutter and Dart
+    # Step 2: Remove any pre-installed Flutter SDK to avoid conflicts
+    - name: Remove pre-installed Flutter
       run: |
         sudo rm -rf /usr/local/flutter
         sudo rm -rf $HOME/.flutter
-        sudo rm -rf $HOME/.dart
-        sudo rm -rf /usr/local/dart-sdk
-        sudo apt-get remove dart
 
     # Step 3: Install specific Flutter version (3.13.0 with Dart 3.2.1)
     - name: Install specific Flutter version (3.13.0)
