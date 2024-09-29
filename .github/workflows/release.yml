@@ -1,4 +1,4 @@
-name: Flutter Release APK Build
+name: Flutter Release APK Build v3
 
 on:
   workflow_dispatch:
@@ -10,44 +10,47 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # Step 1: Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 1: Remove any pre-installed Flutter SDK
-    - name: Remove pre-installed Flutter
+    # Step 2: Remove pre-installed Flutter and Dart SDK to avoid conflicts
+    - name: Remove pre-installed Flutter and Dart
       run: |
         sudo rm -rf /usr/local/flutter
         sudo rm -rf $HOME/.flutter
+        sudo rm -rf $HOME/.dart
+        sudo rm -rf /usr/local/dart-sdk
+        sudo apt-get remove dart
 
-    # Step 2: Manually install specific Flutter version (3.13.0)
-    - name: Install specific Flutter version (3.13.0 with Dart 3.2.1)
+    # Step 3: Install specific Flutter version (3.13.0 with Dart 3.2.1)
+    - name: Install specific Flutter version (3.13.0)
       run: |
         git clone https://github.com/flutter/flutter.git -b 3.13.0 --depth 1
-        echo "$PWD/flutter/bin" >> $GITHUB_PATH  # Add Flutter to PATH
-        export PATH="$PWD/flutter/bin:$PATH"  # Temporarily add Flutter to PATH for this script
-        flutter --version  # Verify Flutter installation
+        echo "$PWD/flutter/bin" >> $GITHUB_PATH  # Add Flutter to PATH temporarily for the current shell
+        export PATH="$PWD/flutter/bin:$PATH"  # Add Flutter to PATH for this script
+        flutter --version  # Check Flutter version
 
-    # Step 3: Add Flutter permanently to PATH for subsequent steps
+    # Step 4: Add Flutter to PATH for all subsequent steps
     - name: Add Flutter to PATH
       run: echo "$PWD/flutter/bin" >> $GITHUB_PATH
 
-    # Step 4: Check Flutter and Dart versions to verify
+    # Step 5: Check Flutter and Dart versions to verify correctness
     - name: Check Flutter and Dart versions
       run: |
         flutter --version
         dart --version
 
-    # Step 5: Install dependencies
+    # Step 6: Install dependencies
     - name: Install dependencies
       run: flutter pub get
 
-    # Step 6: Build release APK
+    # Step 7: Build release APK
     - name: Build release APK
       run: flutter build apk --release --no-shrink
 
-    # Step 7: Upload APK
+    # Step 8: Upload APK
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
-        name: app-release.apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        name: app-release
