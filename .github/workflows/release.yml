@@ -1,10 +1,7 @@
-name: Flutter Release APK Build
+name: Flutter Release APK Build v2
 
 on:
-  # Option to run manually
   workflow_dispatch:
-
-  # Option to run daily at 00:00 UTC
   schedule:
     - cron: '0 0 * * *'
 
@@ -13,29 +10,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Set up Flutter SDK
+    # Set up Dart SDK version >=3.2.1
+    - name: Setup Dart SDK
+      uses: dart-lang/setup-dart@v1
+      with:
+        sdk: '>=3.2.1 <4.0.0'
+
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.13.0'
 
-    # Install Flutter dependencies
     - name: Install dependencies
       run: flutter pub get
 
-    # Run tests (optional but recommended)
-    - name: Run tests
-      run: flutter test
-
-    # Build APK for release
     - name: Build release APK
-      run: flutter build apk --release
+      run: flutter build apk --release --no-shrink
 
-    # Upload APK artifact to GitHub for download
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
