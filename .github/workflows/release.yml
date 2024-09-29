@@ -14,43 +14,35 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Step 2: Remove any pre-installed Flutter SDK to avoid conflicts
-    - name: Remove pre-installed Flutter
+    # Step 2: Install Flutter with FVM
+    - name: Install FVM
       run: |
-        sudo rm -rf /usr/local/flutter
-        sudo rm -rf $HOME/.flutter
-
-    # Step 3: Install specific Flutter version (3.13.0 with Dart 3.2.1)
-    - name: Install specific Flutter version (3.13.0)
-      run: |
-        git clone https://github.com/flutter/flutter.git -b 3.13.0 --depth 1
-        echo "$PWD/flutter/bin" >> $GITHUB_PATH  # Add Flutter to PATH temporarily for the current shell
+        git clone https://github.com/flutter/flutter.git -b stable --depth 1
+        echo "$PWD/flutter/bin" >> $GITHUB_PATH  # Add Flutter to PATH temporarily
         export PATH="$PWD/flutter/bin:$PATH"  # Add Flutter to PATH for this script
-        flutter --version  # Check Flutter version
+        flutter pub global activate fvm
+        fvm install 3.13.0  # Install Flutter version
+        fvm use 3.13.0  # Use this version
 
-    # Step 4: Add Flutter to PATH for all subsequent steps
-    - name: Add Flutter to PATH
-      run: echo "$PWD/flutter/bin" >> $GITHUB_PATH
+    # Step 3: Add Flutter to PATH for all subsequent steps
+    - name: Add FVM Flutter to PATH
+      run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
 
-    # Step 5: Clean Flutter cache to ensure no old Dart SDK is being used
-    - name: Clean Flutter cache
-      run: flutter clean
-
-    # Step 6: Check Flutter and Dart versions to verify correctness
+    # Step 4: Check Flutter and Dart versions to verify correctness
     - name: Check Flutter and Dart versions
       run: |
         flutter --version
         dart --version
 
-    # Step 7: Install dependencies
+    # Step 5: Install dependencies
     - name: Install dependencies
-      run: flutter pub get
+      run: fvm flutter pub get
 
-    # Step 8: Build release APK
+    # Step 6: Build release APK
     - name: Build release APK
-      run: flutter build apk --release --no-shrink
+      run: fvm flutter build apk --release --no-shrink
 
-    # Step 9: Upload APK
+    # Step 7: Upload APK
     - name: Upload APK
       uses: actions/upload-artifact@v3
       with:
