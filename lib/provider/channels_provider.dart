@@ -7,7 +7,7 @@ class ChannelsProvider with ChangeNotifier {
   List<Channel> channels = [];
   List<Channel> filteredChannels = [];
   String sourceUrl =
-      'https://raw.githubusercontent.com/FunctionError/PiratesTv/main/combined_playlist.m3u';
+      'https://raw.githubusercontent.com/arvapps-forked-projects/Indian-IPTV-App/master/extras/channels.m3u';
 
   Future<List<Channel>> fetchM3UFile() async {
     final response = await http.get(Uri.parse(sourceUrl));
