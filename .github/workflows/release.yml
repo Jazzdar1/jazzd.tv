@@ -1,4 +1,4 @@
-name: Flutter Release APK Build v2
+name: Flutter Release APK Build
 
 on:
   workflow_dispatch:
@@ -13,16 +13,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Set up Dart SDK version >=3.2.1
-    - name: Setup Dart SDK
-      uses: dart-lang/setup-dart@v1
-      with:
-        sdk: '3.2.1'
+    # Manually install specific Flutter version (3.13.0 with Dart 3.2.1)
+    - name: Install specific Flutter version
+      run: |
+        git clone https://github.com/flutter/flutter.git -b 3.13.0 --depth 1
+        echo "$PWD/flutter/bin" >> $GITHUB_PATH
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.13.0'
+    # Check Flutter version and Dart version
+    - name: Check Flutter and Dart versions
+      run: |
+        flutter --version
+        dart --version
 
     - name: Install dependencies
       run: flutter pub get
